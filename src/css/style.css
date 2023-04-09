@@ -1,6 +1,6 @@
-@import '~node_modules/modern-normalize/modern-normalize.css';
 .search-form {
     display: flex;
+    position: fixed;
     background-color: #DEEDED;
     padding: 20px;
     justify-content: center;
