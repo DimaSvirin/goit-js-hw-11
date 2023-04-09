@@ -5,7 +5,7 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from 'notiflix';
 import axios from 'axios';
 
-const form = document.getElementById('.search-form');
+const form = document.querySelector('.search-form');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 let page = 1;
@@ -24,6 +24,9 @@ function handleFormSubmit(event) {
   fetchImages(searchQuery);
 }
 
+function clearGallery() {
+  gallery.innerHTML = '';
+}
 function handleLoadMoreClick() {
   const searchQuery = form.elements.searchQuery.value;
   if (!searchQuery) {
@@ -31,10 +34,6 @@ function handleLoadMoreClick() {
   }
   page += 1;
   fetchImages(searchQuery);
-}
-
-function clearGallery() {
-  gallery.innerHTML = '';
 }
 
 async function fetchImages(searchQuery) {
@@ -69,7 +68,7 @@ async function handleImageFetch(data) {
     }));
 
     Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
-    appendImages(images);
+    addImages(images);
 
     if (data.totalHits <= page * 40) {
       hideLoadMoreBtn();
@@ -81,8 +80,15 @@ async function handleImageFetch(data) {
   }
 }
 
+function hideLoadMoreBtn() {
+  loadMoreBtn.classList.add('is-hidden');
+}
 
-function appendImages(images) {
+function showLoadMoreBtn() {
+  loadMoreBtn.classList.remove('is-hidden');
+}
+
+function addImages(images) {
   const imageCards = images.map(
     (image) => `
     <div class="photo-card">
@@ -103,19 +109,7 @@ function appendImages(images) {
   const lightbox = new SimpleLightbox('.gallery a', {
     captions: true,
     captionsData: 'alt',
+    captionDelay: 250,
   });
   lightbox.refresh();
-}
-
-
-function showNotification(message) {
-  Notiflix.Notify.failure(message);
-}
-
-function hideLoadMoreBtn() {
-  loadMoreBtn.classList.add('is-hidden');
-}
-
-function showLoadMoreBtn() {
-  loadMoreBtn.classList.remove('is-hidden');
 }
